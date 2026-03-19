@@ -21,8 +21,10 @@ allowed-tools:
 
 ## 모드 판별
 
-- `$ARGUMENTS`가 비어있거나 `setup` → **초기 설정 모드**
-- `$ARGUMENTS`가 `setting` → **설정 변경 모드** (기존 config 로드 후 변경할 항목만 수정)
+- `$ARGUMENTS`가 `setting` → **설정 변경 모드**
+- 그 외 (비어있거나 `setup`) → **자동 판별**:
+  - `~/.claude/self-evolve-config.json`이 존재하면 → **현재 설정 표시 + 변경 제안 모드**
+  - 존재하지 않으면 → **초기 설정 모드**
 
 ## 1단계: 환경 탐색
 
@@ -30,7 +32,7 @@ allowed-tools:
 
 ### 1-1. 기존 설정 확인
 - `~/.claude/self-evolve-config.json` 존재 여부
-- 존재하면 내용을 읽어서 현재 설정 표시 (setting 모드의 기반)
+- 존재하면 내용을 읽는다
 
 ### 1-2. 문서화 환경 감지
 - Obsidian 볼트 감지: `~/second-brain/` 등 `.obsidian/` 폴더가 있는 디렉토리
@@ -43,21 +45,69 @@ allowed-tools:
 - 기존 스킬 수 (전역 + 프로젝트)
 - `.omc/` 디렉토리 존재 여부
 
-### 탐색 결과 표시
+### 기존 설정이 있는 경우 — 현재 설정 요약 표시
+
+config를 읽어서 아래와 같이 현재 설정을 **한눈에** 보여준다:
+
+```markdown
+## 현재 Self-Evolve 설정
+
+### 분석 영역
+| 영역 | 상태 | 모델 |
+|------|------|------|
+| 문서화 (doc) | ✓ ON | sonnet |
+| 컨텍스트 (context) | ✓ ON | sonnet |
+| 설정 (settings) | ✗ OFF | sonnet |
+| 스킬 (skills) | ✓ ON | sonnet |
+| 워크플로우 (workflow) | ✓ ON | sonnet |
+
+### 문서화 대상
+- Obsidian: ~/second-brain/
+- 커스텀 커맨드: /brain
+
+### 옵션
+- Auto 모드: OFF
+- 스캔 모드: quick
+- 토큰 표시: ON
+```
+
+표시 후 AskUserQuestion으로 변경 여부를 묻는다:
+
+```
+AskUserQuestion(
+    questions=[{
+        "question": "변경할 항목을 선택하세요 (변경 없으면 '현재 설정 유지')",
+        "header": "설정 변경",
+        "multiSelect": true,
+        "options": [
+            {"label": "현재 설정 유지", "description": "변경 없이 현재 설정 그대로 사용"},
+            {"label": "분석 영역 변경", "description": "활성화/비활성화할 영역 재선택"},
+            {"label": "문서화 대상 변경", "description": "저장 위치 또는 커맨드 변경"},
+            {"label": "모델 변경", "description": "에이전트별 모델 (sonnet/opus) 조정"}
+        ]
+    }]
+)
+```
+
+- **"현재 설정 유지"** 선택 → "설정 변경 없음. `/self-evolve`로 바로 사용하세요!" 출력 후 종료
+- **특정 항목 선택** → 해당 라운드만 실행 (라운드 1/2/3 중 선택된 것만)
+- **전체 초기화** → "Other"로 "처음부터" 입력 시 초기 설정 모드로 전환
+
+### 기존 설정이 없는 경우 — 환경 탐색 결과 표시
 
 ```markdown
 ## 환경 탐색 결과
 
 | 항목 | 상태 |
 |------|------|
-| 기존 설정 | ✓ 존재 (v1.0.0) / ✗ 없음 |
-| Obsidian 볼트 | ✓ ~/second-brain/ |
-| 문서화 스킬 | brain-dump, brain-log, doc-writer |
-| Notion 스킬 | ✓ notion, notion-spec |
-| 전역 스킬 수 | 27개 |
+| Obsidian 볼트 | ✓ ~/second-brain/ / ✗ 없음 |
+| 문서화 스킬 | brain-dump, brain-log 등 / 없음 |
+| 전역 스킬 수 | N개 |
 | OMC 설치 | ✓ / ✗ |
 | 기존 훅 | N개 등록됨 |
 ```
+
+이후 2단계(인터뷰)로 진행.
 
 ## 2단계: 인터뷰
 
