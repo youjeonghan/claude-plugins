@@ -1,0 +1,115 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1773945281429,
+  "projectRoot": "/Users/youjeonghan/claude-plugins",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "plugins": {
+      "path": "plugins",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1773945281383,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "",
+      "accessCount": 2,
+      "lastAccessed": 1773945293483,
+      "type": "directory"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945296489,
+      "type": "file"
+    },
+    {
+      "path": "marketplace.json",
+      "accessCount": 1,
+      "lastAccessed": 1773945296673,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/.claude-plugin/plugin.json",
+      "accessCount": 1,
+      "lastAccessed": 1773945300107,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/README.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945302778,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/skills/self-evolve/SKILL.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945305258,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/skills/self-evolve/references/self-evolve-config.schema.json",
+      "accessCount": 1,
+      "lastAccessed": 1773945305708,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/commands/self-evolve-setup.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945309331,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/commands/self-evolve-help.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945309487,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/skills/self-evolve/references/analyzers/doc.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945312154,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.0/skills/self-evolve/references/hook-integration.md",
+      "accessCount": 1,
+      "lastAccessed": 1773945312183,
+      "type": "file"
+    },
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "accessCount": 1,
+      "lastAccessed": 1773945410537,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

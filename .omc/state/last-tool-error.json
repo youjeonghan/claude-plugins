@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"claude plugin marketplace add https://github.com/youjeonghan/claude-plugins 2>&1\",\"description\":\"Add marketplace from GitHub\"}",
+  "error": "Exit code 1\nAdding marketplace...\nRefreshing marketplace cache (timeout: 120s)…\nCloning repository (timeout: 120s): https://github.com/youjeonghan/claude-plugins.git\nClone complete, validating marketplace…\n✘ Failed to add marketplace: Marketplace file not found at /Users/youjeonghan/.claude/plugins/marketplaces/temp_1773945391533/.claude-plugin/marketplace.json",
+  "timestamp": "2026-03-19T18:36:32.771Z",
+  "retry_count": 1
+}
