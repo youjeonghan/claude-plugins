@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "self-evolve-config",
+  "description": "self-evolve 플러그인 설정 스키마",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "version": { "type": "string" },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string", "enum": ["obsidian", "notion", "file"] },
+              "path": { "type": "string" }
+            }
+          }
+        },
+        "customCommand": { "type": ["string", "null"], "default": null }
+      }
+    },
+    "projectContext": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "files": { "type": "array", "items": { "type": "string" }, "default": ["CLAUDE.md", "AGENTS.md"] },
+        "projectMemory": { "type": "boolean", "default": true },
+        "staleDays": { "type": "number", "default": 30 }
+      }
+    },
+    "globalSettings": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "scope": { "type": "array", "items": { "type": "string", "enum": ["permissions", "hooks", "env"] } }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "scanPaths": { "type": "array", "items": { "type": "string" } },
+        "scanMode": { "type": "string", "enum": ["quick", "full"], "default": "quick" }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "minRepetitionCount": { "type": "number", "default": 2 }
+      }
+    },
+    "analyzers": {
+      "type": "object",
+      "patternProperties": {
+        "^(doc|context|settings|skills|workflow)$": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "model": { "type": "string", "enum": ["haiku", "sonnet", "opus"], "default": "sonnet" }
+          }
+        }
+      }
+    },
+    "customAnalyzers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "prompt"],
+        "properties": {
+          "name": { "type": "string" },
+          "prompt": { "type": "string" },
+          "model": { "type": "string", "enum": ["haiku", "sonnet", "opus"], "default": "sonnet" }
+        }
+      }
+    },
+    "auto": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "triggerEvents": { "type": "array", "items": { "type": "string" }, "default": ["Stop"] },
+        "minSessionDuration": { "type": "number", "default": 300 },
+        "minToolCalls": { "type": "number", "default": 5 }
+      }
+    },
+    "cache": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "path": { "type": "string", "default": "~/.claude/self-evolve-cache.json" },
+        "ttlMinutes": { "type": "number", "default": 60 },
+        "targets": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "exclusions": {
+      "type": "object",
+      "properties": {
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "areas": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "verbose": { "type": "boolean", "default": false },
+        "maxSuggestionsPerArea": { "type": "number", "default": 5 },
+        "showTokenUsage": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}
