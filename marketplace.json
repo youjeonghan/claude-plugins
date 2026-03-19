@@ -1,0 +1,18 @@
+{
+  "name": "youjeonghan-claude-plugins",
+  "description": "youjeonghan의 Claude Code 플러그인 모음",
+  "owner": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "plugins": [
+    {
+      "name": "self-evolve",
+      "description": "세션 분석 후 환경 자동 개선 — 5개 영역 병렬 분석 + 선택적 적용",
+      "version": "0.1.0",
+      "source": "./plugins/self-evolve/0.1.0",
+      "category": "productivity",
+      "tags": ["self-evolve", "session", "improvement", "analysis"]
+    }
+  ]
+}
