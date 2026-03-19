@@ -1,0 +1,13 @@
+{
+  "name": "self-evolve",
+  "version": "0.1.0",
+  "description": "세션 분석 후 환경 자동 개선. 문서화, 프로젝트 컨텍스트, 설정, 스킬, 워크플로우 5개 영역을 병렬 분석하고 개선안을 제시",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "commands": "./commands/"
+}
