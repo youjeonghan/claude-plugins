@@ -39,10 +39,28 @@
   },
   "hotPaths": [
     {
+      "path": "plugins/self-evolve/0.1.0/commands/self-evolve-setup.md",
+      "accessCount": 3,
+      "lastAccessed": 1773946368014,
+      "type": "file"
+    },
+    {
       "path": "",
       "accessCount": 2,
       "lastAccessed": 1773945293483,
       "type": "directory"
+    },
+    {
+      "path": ".claude-plugin/marketplace.json",
+      "accessCount": 2,
+      "lastAccessed": 1773946580828,
+      "type": "file"
+    },
+    {
+      "path": "plugins/self-evolve/0.1.1/.claude-plugin/plugin.json",
+      "accessCount": 2,
+      "lastAccessed": 1773946589479,
+      "type": "file"
     },
     {
       "path": "README.md",
@@ -81,12 +99,6 @@
       "type": "file"
     },
     {
-      "path": "plugins/self-evolve/0.1.0/commands/self-evolve-setup.md",
-      "accessCount": 1,
-      "lastAccessed": 1773945309331,
-      "type": "file"
-    },
-    {
       "path": "plugins/self-evolve/0.1.0/commands/self-evolve-help.md",
       "accessCount": 1,
       "lastAccessed": 1773945309487,
@@ -102,12 +114,6 @@
       "path": "plugins/self-evolve/0.1.0/skills/self-evolve/references/hook-integration.md",
       "accessCount": 1,
       "lastAccessed": 1773945312183,
-      "type": "file"
-    },
-    {
-      "path": ".claude-plugin/marketplace.json",
-      "accessCount": 1,
-      "lastAccessed": 1773945410537,
       "type": "file"
     }
   ],
