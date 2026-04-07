@@ -9,8 +9,8 @@
     {
       "name": "self-evolve",
       "description": "세션 분석 후 환경 자동 개선 — 5개 영역 병렬 분석 + 선택적 적용",
-      "version": "0.1.2",
-      "source": "./plugins/self-evolve/0.1.2",
+      "version": "0.1.3",
+      "source": "./plugins/self-evolve/0.1.3",
       "category": "productivity",
       "tags": ["self-evolve", "session", "improvement", "analysis"]
     }
