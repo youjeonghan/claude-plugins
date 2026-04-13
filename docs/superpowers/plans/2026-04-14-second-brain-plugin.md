@@ -88,18 +88,20 @@ git commit -m "feat: second-brain 플러그인 scaffold — plugin.json 추가"
 ```markdown
 ---
 name: brain-setup
-description: 'Second Brain 볼트 경로 설정 — ~/.claude/brain-config.json 생성/갱신'
+description: 'Second Brain 볼트 경로 설정 — ~/.claude/brain-config.json 생성/갱신, 볼트 폴더 구조 scaffolding'
 allowed-tools:
   - Read
   - Write
   - Edit
   - Bash(ls *)
+  - Bash(mkdir *)
   - AskUserQuestion
 ---
 
 # Brain Setup
 
 `~/.claude/brain-config.json`을 생성하거나 업데이트한다.
+볼트 경로에 기본 폴더 구조(`Projects/`, `Resources/`)와 `README.md`가 없으면 생성한다.
 
 ## Step 1: 현재 설정 확인
 
@@ -112,7 +114,7 @@ allowed-tools:
 ```
 AskUserQuestion(
     questions=[{
-        "question": "현재 볼트 경로: {현재_경로}\n변경할까요?",
+        "question": "현재 볼트 경로: {현재_경로}\n어떻게 할까요?",
         "header": "Brain Setup",
         "multiSelect": false,
         "options": [
@@ -123,7 +125,7 @@ AskUserQuestion(
 )
 ```
 
-"현재 설정 유지" 선택 시 → "현재 설정을 유지합니다. `brain-read`, `brain-write`, `brain-cleanse`를 바로 사용하세요!" 출력 후 종료.
+"현재 설정 유지" 선택 시 → Step 3(폴더 구조 확인)으로 이동. 경로는 기존 값을 그대로 사용.
 
 **파일이 없으면:** 바로 Step 2로 이동.
 
@@ -134,7 +136,7 @@ AskUserQuestion으로 볼트 절대 경로를 입력받는다:
 ```
 AskUserQuestion(
     questions=[{
-        "question": "Obsidian 볼트의 절대 경로를 입력해주세요",
+        "question": "Obsidian 볼트의 절대 경로를 입력해주세요 (존재하지 않으면 새로 생성합니다)",
         "header": "볼트 경로 설정",
         "multiSelect": false,
         "options": [
@@ -144,15 +146,98 @@ AskUserQuestion(
 )
 ```
 
-## Step 3: 경로 유효성 확인
+## Step 3: 폴더 구조 확인 및 scaffolding
 
-입력한 경로가 존재하는 디렉토리인지 Bash로 확인:
+### 3-1: 볼트 디렉토리 존재 확인
 
 ```bash
 ls {입력_경로}
 ```
 
-오류 발생 시: "해당 경로가 존재하지 않습니다. 경로를 다시 확인해주세요." 출력 후 Step 2로 돌아간다.
+존재하지 않으면 → AskUserQuestion으로 생성 여부 확인:
+
+```
+AskUserQuestion(
+    questions=[{
+        "question": "{입력_경로} 디렉토리가 존재하지 않습니다. 새로 생성할까요?",
+        "header": "볼트 디렉토리 생성",
+        "multiSelect": false,
+        "options": [
+            {"label": "생성", "description": "디렉토리와 기본 구조를 만들겠습니다"},
+            {"label": "취소", "description": "경로를 다시 입력합니다"}
+        ]
+    }]
+)
+```
+
+"취소" 선택 시 → Step 2로 돌아간다.
+
+"생성" 선택 시:
+
+```bash
+mkdir -p {입력_경로}/Projects
+mkdir -p {입력_경로}/Resources
+```
+
+### 3-2: Projects/ 폴더 확인
+
+```bash
+ls {입력_경로}/Projects
+```
+
+오류 발생(없음) 시:
+
+```bash
+mkdir -p {입력_경로}/Projects
+```
+
+### 3-3: Resources/ 폴더 확인
+
+```bash
+ls {입력_경로}/Resources
+```
+
+오류 발생(없음) 시:
+
+```bash
+mkdir -p {입력_경로}/Resources
+```
+
+### 3-4: README.md 확인 및 생성
+
+```bash
+ls {입력_경로}/README.md
+```
+
+존재하지 않으면 Write로 생성:
+
+파일 경로: `{입력_경로}/README.md`
+
+내용:
+- 제목: `# Second Brain`
+- 볼트 구조 설명 (Projects/, Resources/ 역할)
+- brain-read / brain-write / brain-cleanse 사용법 안내
+
+```
+# Second Brain
+
+Claude Code와 연동된 Obsidian 지식 베이스.
+
+## 폴더 구조
+
+| 폴더 | 용도 |
+|------|------|
+| `Projects/` | 프로젝트별 설계 문서, 진행 일지 |
+| `Resources/` | 공통 레퍼런스, 학습 자료 |
+
+## Claude Code 스킬 연동
+
+- **brain-read** — 볼트에서 관련 문서 검색·참조
+- **brain-write** — 새 문서 생성 또는 기존 문서 업데이트
+- **brain-cleanse** — 중복 문서 탐지·정리, 메타데이터 일괄 추가
+
+설정 파일: `~/.claude/brain-config.json`
+```
 
 ## Step 4: brain-config.json 생성/업데이트
 
@@ -168,11 +253,18 @@ ls {입력_경로}
 
 ## Step 5: 완료 안내
 
+생성/확인된 항목을 목록으로 표시:
+
 ```
 ## 설정 완료!
 
 볼트 경로: {입력_경로}
 설정 파일: ~/.claude/brain-config.json
+
+### 볼트 구조
+✓ Projects/
+✓ Resources/
+✓ README.md
 
 이제 다음 스킬을 사용할 수 있습니다:
 - brain-read  — 볼트에서 문서 검색·참조
@@ -180,18 +272,21 @@ ls {입력_경로}
 - brain-cleanse — 중복 문서 탐지·정리
 ```
 
+이미 존재하던 항목은 ✓(기존), 새로 생성된 항목은 ✓(생성됨)으로 구분 표시.
+
 ## 주의사항
 
 - 한국어로 대화
 - 모든 사용자 입력은 AskUserQuestion으로 받는다
-- 경로 유효성 확인을 반드시 수행한다
+- 기존 파일은 덮어쓰지 않는다 (README.md 포함)
+- 볼트 디렉토리 생성은 반드시 사용자 확인 후 진행
 ```
 
 - [ ] **Step 2: 커밋**
 
 ```bash
 git add plugins/second-brain/0.1.0/commands/brain-setup.md
-git commit -m "feat: brain-setup 커맨드 추가 — 볼트 경로 설정 워크플로우"
+git commit -m "feat: brain-setup 커맨드 추가 — 볼트 경로 설정 + 폴더 구조 scaffolding"
 ```
 
 ---

@@ -36,13 +36,24 @@ plugins/second-brain/0.1.0/
 ### brain-setup 커맨드
 
 볼트 경로를 물어보고 `~/.claude/brain-config.json`을 생성/갱신한다.
+볼트 경로에 기본 폴더 구조와 README.md가 없으면 함께 생성한다.
 
 동작 흐름:
 1. `~/.claude/brain-config.json` 존재 여부 확인
 2. 있으면 현재 볼트 경로 표시 + 변경 여부 질문
 3. 없으면 볼트 경로 입력 안내
-4. 경로 유효성 확인 (디렉토리 존재 여부)
-5. `brain-config.json` 생성/갱신
+4. 볼트 디렉토리 존재 여부 확인 — 없으면 사용자 확인 후 생성
+5. `Projects/`, `Resources/` 폴더 확인 — 없으면 자동 생성
+6. `README.md` 확인 — 없으면 볼트 구조 설명 파일 자동 생성
+7. `brain-config.json` 생성/갱신
+
+생성되는 볼트 구조:
+```
+{vault_path}/
+  Projects/     ← 프로젝트별 설계 문서, 진행 일지
+  Resources/    ← 공통 레퍼런스, 학습 자료
+  README.md     ← 볼트 구조 및 스킬 연동 안내
+```
 
 생성되는 파일 형식:
 ```json
