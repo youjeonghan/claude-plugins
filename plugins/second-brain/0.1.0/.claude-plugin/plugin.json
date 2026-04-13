@@ -1,0 +1,13 @@
+{
+  "name": "second-brain",
+  "version": "0.1.0",
+  "description": "Obsidian Second Brain 볼트를 Claude Code에서 읽고, 쓰고, 정리하는 스킬 모음",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "commands": "./commands/"
+}
