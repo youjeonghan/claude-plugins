@@ -1,0 +1,13 @@
+{
+  "name": "second-brain",
+  "version": "0.2.0",
+  "description": "LLM Wiki 패턴의 Obsidian Second Brain 볼트 운영 스킬 모음 — ingest/query/lint 3-오퍼레이션",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "commands": "./commands/"
+}
