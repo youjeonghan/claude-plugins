@@ -1,11 +1,11 @@
 ---
 name: brain-lint
-description: Second Brain 볼트의 헬스체크 — description 누락/빈약, 중복 wiki, orphan 페이지, stale 페이지, 누락 cross-reference 등을 탐지하고 승인형 자동 수정을 제공한다.
+description: Second Brain 단일 통합 wiki의 헬스체크 — description 누락/빈약, 중복 wiki, orphan 페이지, stale 페이지, 누락 cross-reference, 아카이브 후보 등을 탐지하고 승인형 자동 수정을 제공한다.
 ---
 
 # Brain Lint
 
-LLM Wiki의 **lint** 오퍼레이션. 주기적으로 볼트 품질을 점검한다. 원문 패턴의 "Lint" 역할.
+LLM Wiki의 **lint** 오퍼레이션. 주기적으로 볼트 품질을 점검한다. 규약 원본은 볼트 `CLAUDE.md`.
 
 ## Step 0: 볼트 경로 확인
 
@@ -13,8 +13,8 @@ LLM Wiki의 **lint** 오퍼레이션. 주기적으로 볼트 품질을 점검한
 
 ## Step 1: 스코프 결정
 
-- `--scope all` — 볼트 전체 (기본)
-- `--scope knowledge` / `knowledge:<도메인>` / `project:<프로젝트>` — 범위 제한
+- `--scope all` — wiki 전체 (기본)
+- `--area <영역>` — 특정 영역(`wiki/<영역>`)만
 
 ## Step 2: 검사 항목
 
@@ -28,15 +28,15 @@ Grep(pattern="^description:\\s*$|^description:\\s*\\.\\.\\.", path="<scope>", gl
 
 ### (b) 중복·근접 wiki 페이지
 
-같은 레이어/폴더 내 description·title 유사도 검사. 아래 휴리스틱:
+같은 영역 폴더 내 description·title 유사도 검사. 휴리스틱:
 - title이 서로 70% 이상 공통 단어
 - description이 같은 명사 3개 이상 공유
 
-예: PixelLab 3개 파일(`pixellab-summary`, `pixellab-animation`, `pixellab-full-features`) → 통합 후보 제안.
+예: `wiki/game-dev/pixellab-{summary,animation,full-features}.md` → 통합 후보 제안.
 
 ### (c) orphan 페이지 (인바운드 wikilink 0)
 
-각 wiki 페이지에 대해 `Grep(pattern="\\[\\[<slug>\\]\\]|\\[\\[<slug>\\|", path="<vault>")`로 인바운드 카운트. 0이면 flag.
+각 wiki 페이지에 대해 `Grep(pattern="\\[\\[<slug>\\]\\]|\\[\\[<slug>\\|", path="wiki")`로 인바운드 카운트. 0이면 flag.
 
 ### (d) stale 페이지
 
@@ -46,11 +46,13 @@ Grep(pattern="^description:\\s*$|^description:\\s*\\.\\.\\.", path="<scope>", gl
 
 wiki 페이지 본문에서 다른 wiki 페이지의 title/slug가 plain text로 등장하는데 `[[wikilink]]`로 감싸지 않은 케이스 탐지. 치환 후보 제안.
 
+예: `wiki/눕/전투-시스템-설계.md`에서 "무기 스탯" 언급 → `[[무기-스탯-체계-설계]]` 링크화 제안.
+
 ### (f) frontmatter 규격 위반
 
 - `type` 필드 없음 또는 허용값(`source|wiki|index|log`) 외 값
 - `date`, `updated` 형식 오류
-- `domain` / `layer` 필드 잔존 (v2에서 제거됨)
+- 구 필드(`domain`/`layer`) 또는 구 type 값 잔존 → 마이그레이션 정리 대상
 
 ### (g) 파일명 컨벤션 위반
 
@@ -58,17 +60,21 @@ wiki 페이지 본문에서 다른 wiki 페이지의 title/slug가 plain text로
 - 대문자 (영문 제목)
 - 공백 포함
 
+### (h) 아카이브 후보
+
+- 완료·중단 신호가 있는 프로젝트/노력 페이지(예: 본문에 "완료/출시/중단", `updated`가 오래됨)를 `archive/<이름>/` 이동 후보로 제안. 지식 페이지는 제외.
+
 ## Step 3: 리포트 출력
 
 카테고리별로 그룹화:
 
 ```
 ## description 빈약 (3건)
-- projects/눕/wiki/밸런스-시트.md — "밸런스 시트"
+- wiki/눕/밸런스-시트.md — "밸런스 시트"
 - ...
 
 ## 중복 후보 (1건)
-- knowledge/게임개발/wiki/pixellab-{summary,animation,full-features}.md → 통합 제안
+- wiki/game-dev/pixellab-{summary,animation,full-features}.md → 통합 제안
 
 ## orphan (2건)
 - ...
@@ -76,11 +82,14 @@ wiki 페이지 본문에서 다른 wiki 페이지의 title/slug가 plain text로
 ## stale (0건)
 
 ## 누락 cross-reference (5건)
-- projects/눕/wiki/전투-시스템-설계.md 에서 "무기 스탯" 언급 → [[무기-스탯-체계-설계]] 링크화 제안
+- wiki/눕/전투-시스템-설계.md 에서 "무기 스탯" 언급 → [[무기-스탯-체계-설계]] 링크화 제안
 
 ## frontmatter 위반 (0건)
 
 ## 파일명 위반 (0건)
+
+## 아카이브 후보 (1건)
+- wiki/fleeting/... — "중단" 신호 → archive/fleeting/ 이동 제안
 ```
 
 ## Step 4: 승인형 자동 수정

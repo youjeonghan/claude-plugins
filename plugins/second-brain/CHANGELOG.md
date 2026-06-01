@@ -1,5 +1,21 @@
 # Changelog — second-brain
 
+## 0.3.0 — 2026-06-02
+
+### Breaking
+
+- 볼트 구조: 3-레이어(knowledge/projects/archive) → **단일 통합 wiki**. 최상위 `sources/`·`wiki/`·`archive/` 각 1개, 영역은 하위폴더.
+- brain-config `version` 2 → 3.
+
+### Changed
+
+- `brain-ingest`/`brain-query`/`brain-lint`: 레이어 판단 → 영역(area) 판단, 경로 `wiki/<영역>`·`sources/<영역>` 통일, 단일 root `index.md`·`log.md`.
+- `brain-setup`: 단일-wiki scaffolding(`sources/`·`wiki/`·`archive/`·`CLAUDE.md`), config v3. `_Standards.md` 생성 제거(CLAUDE.md 통합).
+
+### Added
+
+- `brain-lint` 아카이브 후보 검사 — 완료·중단 페이지를 `archive/` 이동 제안.
+
 ## 0.2.0 — 2026-04-22
 
 ### Breaking

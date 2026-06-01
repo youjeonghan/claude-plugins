@@ -16,9 +16,9 @@
     },
     {
       "name": "second-brain",
-      "description": "Obsidian Second Brain 볼트 읽기·쓰기·정리 스킬 모음",
-      "version": "0.1.0",
-      "source": "./plugins/second-brain/0.1.0",
+      "description": "카파시 LLM Wiki 단일 통합 wiki 운영 스킬 — ingest/query/lint",
+      "version": "0.3.0",
+      "source": "./plugins/second-brain/0.3.0",
       "category": "productivity",
       "tags": ["second-brain", "obsidian", "notes", "knowledge"]
     }
