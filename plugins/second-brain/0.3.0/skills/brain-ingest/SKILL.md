@@ -60,12 +60,10 @@ Grep 보조: `Grep(pattern="<키워드>", path="wiki", output_mode="files_with_m
 
 ```yaml
 ---
-title: <제목>
 description: <한 줄 요약>
-type: wiki
 date: <YYYY-MM-DD>
 updated: <YYYY-MM-DD>
-tags: [wiki, <영역 태그>, ...]
+tags: [<영역 태그>, ...]
 source_refs:
   - sources/<영역>/<새 source 파일>
 ---

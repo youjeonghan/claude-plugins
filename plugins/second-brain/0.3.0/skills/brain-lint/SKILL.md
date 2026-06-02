@@ -50,9 +50,10 @@ wiki 페이지 본문에서 다른 wiki 페이지의 title/slug가 plain text로
 
 ### (f) frontmatter 규격 위반
 
-- `type` 필드 없음 또는 허용값(`source|wiki|index|log`) 외 값
+- `description` 필드 누락 (필수)
 - `date`, `updated` 형식 오류
-- 구 필드(`domain`/`layer`) 또는 구 type 값 잔존 → 마이그레이션 정리 대상
+- 폴더↔내용 불일치 (예: `sources/`에 합성 페이지, `wiki/`에 원본)
+- 구 필드(`title`/`type`/`domain`/`layer`) 잔존 → 마이그레이션 정리 대상
 
 ### (g) 파일명 컨벤션 위반
 

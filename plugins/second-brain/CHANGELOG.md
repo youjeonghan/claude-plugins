@@ -6,6 +6,7 @@
 
 - 볼트 구조: 3-레이어(knowledge/projects/archive) → **단일 통합 wiki**. 최상위 `sources/`·`wiki/`·`archive/` 각 1개, 영역은 하위폴더.
 - brain-config `version` 2 → 3.
+- frontmatter 간소화: `title`·`type` 필드 제거 — 종류는 폴더가, 제목은 파일명+H1이 표현.
 
 ### Changed
 
