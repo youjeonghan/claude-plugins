@@ -1,7 +1,7 @@
 {
   "name": "second-brain",
-  "version": "0.3.0",
-  "description": "카파시 LLM Wiki 패턴 단일 통합 wiki 운영 스킬 — ingest/query/lint 3-오퍼레이션",
+  "version": "0.4.0",
+  "description": "카파시 LLM Wiki 단일 통합 wiki 운영 스킬 — Claude Code·Codex 공용 매뉴얼(CLAUDE.md, AGENTS.md 심볼릭) 기반 얇은 진입점(ingest/query/lint)",
   "author": {
     "name": "youjeonghan",
     "url": "https://github.com/youjeonghan"

@@ -1,5 +1,13 @@
 # Changelog — second-brain
 
+## 0.4.0 — 2026-06-06
+
+### Changed
+
+- **스킬 슬림화 (E)**: brain-ingest/query/lint가 절차·규약을 복붙하지 않고 볼트 매뉴얼의 "운영 워크플로우" 절을 읽고 따르는 얇은 진입점으로. 규약 출처 1곳 → 드리프트 차단(구 `type`/`title` 잔재 해소).
+- **Codex 호환**: 볼트 매뉴얼을 `CLAUDE.md`(단일 진실원본)로 두고 `AGENTS.md`는 그 심볼릭 링크. 운영 워크플로우를 매뉴얼 §7에 수록 → Codex(스킬 없음)도 매뉴얼만으로 ingest/query/lint 수행.
+- **brain-setup**: scaffolding이 `CLAUDE.md`(매뉴얼) + `AGENTS.md`(심볼릭)를 생성.
+
 ## 0.3.0 — 2026-06-02
 
 ### Breaking

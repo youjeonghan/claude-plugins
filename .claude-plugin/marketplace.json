@@ -16,9 +16,9 @@
     },
     {
       "name": "second-brain",
-      "description": "카파시 LLM Wiki 단일 통합 wiki 운영 스킬 — ingest/query/lint",
-      "version": "0.3.0",
-      "source": "./plugins/second-brain/0.3.0",
+      "description": "카파시 LLM Wiki 단일 통합 wiki 운영 스킬 — Claude Code·Codex 공용(CLAUDE.md/AGENTS.md 심볼릭), ingest/query/lint",
+      "version": "0.4.0",
+      "source": "./plugins/second-brain/0.4.0",
       "category": "productivity",
       "tags": ["second-brain", "obsidian", "notes", "knowledge"]
     }
