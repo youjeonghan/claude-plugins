@@ -1,0 +1,12 @@
+{
+  "name": "yt-clip",
+  "version": "0.1.0",
+  "description": "유튜브 영상에서 원하는 구간만 잘라 mp4/mp3로 저장 — yt-dlp + ffmpeg, macOS·Windows 공통 스크립트",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/"
+}
