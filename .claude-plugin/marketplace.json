@@ -45,6 +45,19 @@
         "yt-dlp",
         "ffmpeg"
       ]
+    },
+    {
+      "name": "coupang-search",
+      "description": "쿠팡 상품 조사 — 검색 목록만 순차 조회해 차단을 피하고, 검색 간격을 히스토리로 자동 조정",
+      "version": "0.1.0",
+      "source": "./plugins/coupang-search/0.1.0",
+      "category": "productivity",
+      "tags": [
+        "coupang",
+        "shopping",
+        "aside",
+        "research"
+      ]
     }
   ]
 }

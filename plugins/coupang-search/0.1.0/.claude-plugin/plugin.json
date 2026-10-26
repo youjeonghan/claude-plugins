@@ -1,0 +1,12 @@
+{
+  "name": "coupang-search",
+  "version": "0.1.0",
+  "description": "쿠팡 상품 조사 — 검색 목록만 순차 조회해 차단을 피하고, 검색 간격을 히스토리로 자동 조정(막히면 상향, 연속 무차단이면 단축 제안)",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/"
+}
