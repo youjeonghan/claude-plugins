@@ -9,7 +9,7 @@
 | self-evolve | 0.1.3 | 세션 분석 후 환경 자동 개선 — 5개 영역 병렬 분석 + 선택적 적용 |
 | second-brain | 0.1.0 | Obsidian Second Brain 볼트 읽기·쓰기·정리 스킬 모음 |
 | yt-clip | 0.1.0 | 유튜브 구간 자르기 — mp4/mp3, macOS·Windows 공통 |
-| coupang-search | 0.1.0 | 쿠팡 상품 조사 — 목록만 순차 조회, 검색 간격 히스토리로 자동 조정 |
+| coupang-search | 0.2.0 | 쿠팡 상품 조사 — 목록·상세 순차 조회, 페이지 간격 히스토리로 자동 조정 |
 
 ## 설치
 
