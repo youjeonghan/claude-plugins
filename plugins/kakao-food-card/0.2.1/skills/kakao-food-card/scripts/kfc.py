@@ -2,8 +2,8 @@
 """kakao-food-card 데이터 수집·판정·사진·빌드 도구.
 
 사용법 (WORK = 작업 폴더, 스크래치패드 하위 권장):
-  kfc.py scan    WORK "검색어1" "검색어2" ... [--area 한강로,용산동] [--pages 3] [--cafe]
-                                                     # 지역 검색 모드: 후보 수집 + 평점 관문 → scan.json
+  kfc.py scan    WORK "검색어1" "검색어2" ... [--near 신용산역,삼각지역] [--walk 10] [--area 동이름,..] [--pages 3] [--cafe]
+                                                     # 지역 검색 모드: 후보 수집 + 도보 거리 필터 + 평점 관문 → scan.json
   kfc.py fetch   WORK ID|"가게명" ... [--region 부천]   # 패널·리뷰 수집 + 판정 태그 → data.json
   kfc.py tag     WORK                                  # 저장된 원본으로 판정 태그만 다시 계산
   kfc.py blogs   WORK [--ids id1,id2] [--n 8]          # 블로그 후기 수집 + 협찬 판별 → 근거 후보
@@ -53,6 +53,9 @@ RECENT_DAYS = 180     # 최근 리뷰 기준 기간(최근 하락·최근 리뷰
 DROP_GAP = 0.5        # 최근 평균이 전체 평균보다 이만큼 낮으면 '최근 하락'
 DROP_MIN = 5          #   최근 리뷰가 이 건수 이상일 때만 판정
 REVIEW_PAGES = 3      # 최신순 리뷰를 몇 페이지(페이지당 약 20건) 볼지
+WALK_MIN = 10         # scan --near: 지정 역 중 하나에서 이 분 안에 걸어갈 수 있으면 후보
+WALK_MPM = 67         #   도보 속도(m/분, 약 4km/h)
+DETOUR = 1.25         #   직선거리 → 실제 걷는 거리 보정
 CAFE_CATS = {"카페", "간식"}
 AD_WORDS = ("원고료", "제공받아", "제공 받아", "제공받았", "제공 받았", "협찬", "체험단", "업체로부터",
             "지원받아", "지원 받아", "광고를 포함", "유료광고", "유료 광고", "소정의", "무상으로 제공", "무료로 제공")
@@ -183,8 +186,44 @@ def get_panel(work, cid, srch=None, fresh=False):
 
 
 # ── scan: 지역 검색 모드 ──────────────────────────────────────────────────
-def scan(work, queries, area, pages, cafe):
+def station_coords(names):
+    """역 이름 → (이름, 위도, 경도). 카카오 검색에서 교통·수송 분류의 첫 결과를 쓴다."""
+    out = []
+    for n in names:
+        base = n if n.endswith("역") else n + "역"
+        hit = next((p for p in search(base).get("place", [])
+                    if p.get("cate_name_depth1") == "교통,수송" and p["name"].startswith(base)), None)
+        if not hit:
+            sys.exit(f"역을 찾지 못했어요: {n}")
+        out.append((base, float(hit["lat"]), float(hit["lon"])))
+        time.sleep(1)
+    return out
+
+
+def walk_minutes(lat1, lon1, lat2, lon2):
+    """두 좌표 사이 도보 예상 분(직선거리 × 우회 보정 ÷ 도보 속도)."""
+    import math
+    r = 6371000
+    p1, p2 = math.radians(lat1), math.radians(lat2)
+    a = math.sin((p2 - p1) / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(math.radians(lon2 - lon1) / 2) ** 2
+    meters = 2 * r * math.asin(math.sqrt(a))
+    return math.ceil(meters * DETOUR / WALK_MPM)
+
+
+def nearest(p, stations):
+    """가게 검색 항목에서 가장 가까운 지정 역 (역 이름, 도보 분). 좌표가 없으면 None."""
+    try:
+        lat, lon = float(p["lat"]), float(p["lon"])
+    except (KeyError, TypeError, ValueError):
+        return None
+    return min(((s, walk_minutes(slat, slon, lat, lon)) for s, slat, slon in stations), key=lambda x: x[1])
+
+
+def scan(work, queries, area, pages, cafe, near, walk):
+    """지역 검색 모드. 지역은 --near 역 이름 + --walk 도보 분(권장) 또는 --area 동 이름으로 거른다.
+    기준에 없는 이유(쇼핑몰·체인·분위기 등)로는 거르지 않는다 — 체인은 태그로만 표시한다."""
     os.makedirs(f"{work}/raw", exist_ok=True)
+    stations = station_coords(near) if near else []
     found = load(work, "scan-search.json", {})
     for q in queries:
         for pg in range(1, pages + 1):
@@ -196,13 +235,21 @@ def scan(work, queries, area, pages, cafe):
                 break
     save(work, "scan-search.json", found)
     tokens = [t.strip() for t in area.split(",") if t.strip()]
-    cands = [p for p in found.values()
-             if p.get("cate_name_depth1") == "음식점"
-             and (cafe or p.get("cate_name_depth2") not in CAFE_CATS)
-             and (not tokens or any(t in p.get("address", "") for t in tokens))]
-    print(f"검색 {len(found)}곳 → 음식점·지역 필터 {len(cands)}곳, 패널 확인 중…", flush=True)
+    cands = []
+    for p in found.values():
+        if p.get("cate_name_depth1") != "음식점" or (not cafe and p.get("cate_name_depth2") in CAFE_CATS):
+            continue
+        if tokens and not any(t in p.get("address", "") for t in tokens):
+            continue
+        near_st = nearest(p, stations) if stations else None
+        if stations and (near_st is None or near_st[1] > walk):
+            continue
+        cands.append((p, near_st))
+    where = (f"{', '.join(s for s, _, _ in stations)}에서 도보 {walk}분 안" if stations else "") + \
+            (f"{' + ' if stations else ''}주소에 {', '.join(tokens)}" if tokens else "")
+    print(f"검색 {len(found)}곳 → 음식점{' · ' + where if where else ''} {len(cands)}곳, 패널 확인 중…", flush=True)
     rows = []
-    for i, p in enumerate(cands, 1):
+    for i, (p, near_st) in enumerate(cands, 1):
         c, new = get_panel(work, p["confirmid"], p)
         if new:
             time.sleep(1.2)
@@ -215,6 +262,7 @@ def scan(work, queries, area, pages, cafe):
         rows.append({"id": p["confirmid"], "name": p["name"], "cat": p.get("last_cate_name"),
                      "cat2": p.get("cate_name_depth2"), "rating": rating, "rc": rc, "blog": blog,
                      "badge": badge, "rank": rank, "st": sub.get("station_simple_name"), "m": sub.get("to_exit_minute"),
+                     "near": f"{near_st[0]} {near_st[1]}분" if near_st else None,
                      "price": ((panel.get("ai_mate") or {}).get("price_level") or {}).get("symbol"),
                      "chain": bool(chain_reason(p["name"], p)), "pass": ok, "why": why})
         if i % 25 == 0:
@@ -227,7 +275,8 @@ def scan(work, queries, area, pages, cafe):
         rk = f"{r['rank']}위" if r["rank"] else ""
         print("\t".join(str(x) for x in (
             r["id"], r["name"], r["cat"], f"★{r['rating']:.1f}({r['rc']})" if r["rating"] is not None else f"비공개({r['rc']})",
-            f"블로그{r['blog']}", (r["badge"] or "-") + (f"/{rk}" if rk else ""), f"{r['st']}{r['m']}분",
+            f"블로그{r['blog']}", (r["badge"] or "-") + (f"/{rk}" if rk else ""),
+            r["near"] or f"{r['st']}{r['m']}분",
             r["price"] or "", "체인" if r["chain"] else "", "" if r["rating"] is not None else r["why"])))
     out = [r for r in rows if not r["pass"]]
     if out:
@@ -682,9 +731,11 @@ if __name__ == "__main__":
     src = opt(rest, "--src", "food")
     folder = opt(rest, "--dir", "cand-food")
     cafe = flag(rest, "--cafe")
+    near = [x.strip() for x in (opt(rest, "--near", "") or "").split(",") if x.strip()]
+    walk = int(opt(rest, "--walk", str(WALK_MIN)))
     os.makedirs(work, exist_ok=True)
     if cmd == "scan":
-        scan(work, rest, area, pages, cafe)
+        scan(work, rest, area, pages, cafe, near, walk)
     elif cmd == "fetch":
         fetch(work, rest, region)
     elif cmd == "tag":
