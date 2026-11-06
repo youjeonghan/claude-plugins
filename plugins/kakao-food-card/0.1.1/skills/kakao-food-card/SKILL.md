@@ -9,6 +9,12 @@ description: 카카오맵 맛집(즐겨찾기 그룹·장소 링크·가게 이�
 
 도구: `S="${CLAUDE_PLUGIN_ROOT}/skills/kakao-food-card/scripts/kfc.py"`, 작업 폴더 `W=<스크래치패드>/kfc-<슬러그>`. 카카오 비공식 API는 로그인 없이 curl로 된다(`search.map.kakao.com`, `place-api.map.kakao.com` + `Referer`·`pf: web` 헤더). 브라우저는 **즐겨찾기 목록 읽기**에만 Aside를 쓴다.
 
+**macOS·Windows 공통** — 아래 명령은 Bash 도구(Windows는 Git Bash)에서 그대로 돈다.
+- 파이썬: `PY=python3`(macOS) / `PY=python`(Windows — `python3`는 Microsoft Store 스텁일 수 있음). 처음에 `$PY --version`으로 3.8 이상인지 확인한다.
+- `-I`(격리 모드)는 사용자 site-packages를 막는다. Pillow가 필요한 `sheet`·`pick`만 `-I` 없이 실행하고, 나머지는 `-I`를 붙인다.
+- Pillow가 없으면 `$PY -m pip install --user pillow`. macOS는 Pillow가 없어도 `pick`이 `sips`로 대체된다(`sheet`는 Pillow 필수).
+- 파일 입출력과 출력은 스크립트가 UTF-8로 고정하므로 `-X utf8`은 필요 없다.
+
 ## 1. 장소 목록 확보
 
 - **가게 이름 목록**이면 바로 2단계.
@@ -21,7 +27,7 @@ description: 카카오맵 맛집(즐겨찾기 그룹·장소 링크·가게 이�
 ## 2. 데이터 수집
 
 ```bash
-python3 -I $S fetch $W "가게1" "가게2" ... --region 부천   # 주소 필터용 지역명
+$PY -I $S fetch $W "가게1" "가게2" ... --region 부천   # 주소 필터용 지역명
 ```
 - `raw/`에 패널·리뷰 원본, `data.json`에 카드 데이터가 생기고 리뷰 다이제스트가 출력된다(`digest`로 재출력).
 - 결과의 주소가 1단계 주소와 같은지 확인한다(동명 가게 주의).
@@ -47,17 +53,17 @@ python3 -I $S fetch $W "가게1" "가게2" ... --region 부천   # 주소 필터
 ## 4. 대표 사진 (음식 위주, 반드시 눈으로 확인)
 
 ```bash
-python3 -I $S photos $W --n 8                 # 카카오 '음식' 태그 사진 → cand-food/
-python3 $S sheet $W --dir cand-food           # 컨택트시트 (PIL 필요해서 -I 없이)
+$PY -I $S photos $W --n 8                 # 카카오 '음식' 태그 사진 → cand-food/
+$PY $S sheet $W --dir cand-food               # 컨택트시트 (Pillow 필요해서 -I 없이)
 ```
 - 시트를 Read로 보고 **첫 장이 그 가게 대표 메뉴**(곱창집이면 곱창판, 횟집이면 회)가 되게 고른다. 음식 태그여도 찌개·볶음밥·사이드만 나오는 경우가 흔하다.
 - 대표 메뉴가 없으면 `--src all`(가게 등록 사진 포함) 또는 `--src blog`(블로그 후기 사진)로 `--ids`를 좁혀 다시 받는다.
-- 확정: `python3 -I $S pick $W <id> cand-food/<id>-3.jpg cand-blog/<id>-0.jpg ...` (4장 권장, 첫 장이 대표).
+- 확정: `$PY $S pick $W <id> cand-food/<id>-3.jpg cand-blog/<id>-0.jpg ...` (4장 권장, 첫 장이 대표). Pillow로 변환하므로 `-I` 없이 실행한다.
 
 ## 5. 빌드·게시
 
 ```bash
-python3 -I $S build $W     # site/index.html 생성, 게시할 img 파일 목록 JSON 출력
+$PY -I $S build $W     # site/index.html 생성, 게시할 img 파일 목록 JSON 출력
 ```
 - section·imgs·sum이 빠진 장소가 있으면 빌드가 멈춘다.
 - Artifact 게시: `file_path=$W/site/index.html`, `root=$W/site`, `files=`(build가 출력한 목록), 첫 게시 때 `icon: "food"`. 같은 file_path로 재게시하면 URL이 유지된다.

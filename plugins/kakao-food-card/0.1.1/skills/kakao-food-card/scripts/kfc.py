@@ -15,6 +15,9 @@ WORK 구조:
   meta.json                          {title, subtitle, note, sections:[{key,label,sub,tone}]}
   cand-{food,all,blog}/ID-k.jpg      사진 후보
   site/index.html, site/img/         게시용
+
+플랫폼: macOS·Windows 공통. 파일은 항상 UTF-8로 읽고 쓰고(Windows 기본 cp949 회피),
+사진 변환(sheet·pick)은 Pillow를 쓴다(macOS에서 Pillow가 없으면 pick만 sips로 대체).
 """
 import glob
 import json
@@ -28,6 +31,35 @@ import urllib.request
 
 UA = "Mozilla/5.0"
 TEMPLATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "template.html")
+
+# Windows 콘솔·파이프 기본 인코딩(cp949)에서도 리뷰의 한글·이모지 출력이 깨지지 않게 한다.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
+
+def rjson(path):
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def wjson(path, obj, **kw):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, **kw)
+
+
+def pil():
+    """Pillow 모듈을 돌려준다. 없으면 None (-I는 사용자 site-packages를 막으므로 sheet·pick은 -I 없이 실행)."""
+    try:
+        from PIL import Image, ImageDraw, ImageOps
+        return Image, ImageDraw, ImageOps
+    except ImportError:
+        return None
+
+
+NO_PIL = "Pillow를 찾지 못했어요. -I 없이 실행하거나 `python3 -m pip install --user pillow`(Windows는 python)로 설치하세요."
 
 
 def get_json(url, ref):
@@ -67,8 +99,8 @@ def fetch(work, names, region):
             for r in j.get("reviews", []):
                 if r["review_id"] not in {x["review_id"] for x in reviews}:
                     reviews.append(r)
-        json.dump({"search": p, "panel": panel}, open(f"{work}/raw/{cid}.json", "w"), ensure_ascii=False)
-        json.dump(reviews, open(f"{work}/raw/{cid}-reviews.json", "w"), ensure_ascii=False)
+        wjson(f"{work}/raw/{cid}.json", {"search": p, "panel": panel})
+        wjson(f"{work}/raw/{cid}-reviews.json", reviews)
         if cid not in known:
             rows.append(normalize(panel))
             known.add(cid)
@@ -96,7 +128,8 @@ def normalize(d):
         "price": (am.get("price_level") or {}).get("symbol"),
         "badge": tr.get("display_text"), "rank": (tr.get("menu_rank") or {}).get("rank"),
         "str": [(desc.get(x["id"], "?"), x["count"]) for x in sc.get("strength_counts", [])][:3],
-        "menu": [{"n": x["name"], "p": x.get("price")} for x in (d.get("menu") or {}).get("menus", {}).get("items", [])[:3]],
+        # 가격 미기재 메뉴는 price가 -1로 와서 '-1원'으로 보이므로 None으로 바꾼다.
+        "menu": [{"n": x["name"], "p": x["price"] if (x.get("price") or 0) > 0 else None} for x in (d.get("menu") or {}).get("menus", {}).get("items", [])[:3]],
         "hours": [(x["day_of_the_week_desc"].split("(")[0], (x.get("on_days") or {}).get("start_end_time_desc") or "휴무") for x in wk],
         "addr": s["address"].get("road"), "imgs": [],
         "sum": "", "pros": [], "cons": [],
@@ -106,8 +139,8 @@ def normalize(d):
 def digest(work):
     """요약 작성용 다이제스트를 출력한다."""
     for r in load(work, "data.json", []):
-        d = json.load(open(f"{work}/raw/{r['id']}.json"))["panel"]
-        revs = json.load(open(f"{work}/raw/{r['id']}-reviews.json"))
+        d = rjson(f"{work}/raw/{r['id']}.json")["panel"]
+        revs = rjson(f"{work}/raw/{r['id']}-reviews.json")
         stars = [x["star_rating"] for x in revs]
         am = d.get("ai_mate") or {}
         print(f"\n===== {r['name']} ({r['id']}) ★{r['rating']} ({r['rc']}) 배지={r['badge']} 역={r['st']} {r['m']}분")
@@ -128,7 +161,7 @@ def photos(work, n, ids, src):
     for r in load(work, "data.json", []):
         if ids and r["id"] not in ids:
             continue
-        d = json.load(open(f"{work}/raw/{r['id']}.json"))["panel"]
+        d = rjson(f"{work}/raw/{r['id']}.json")["panel"]
         if src == "blog":
             urls = [p["url"] for b in (d.get("blog_review") or {}).get("reviews", []) for p in b.get("photos", [])]
         else:
@@ -149,7 +182,8 @@ def photos(work, n, ids, src):
                 continue
             if len(b) < 15000:  # 아이콘·깨진 이미지 제외
                 continue
-            open(f"{work}/{folder}/{r['id']}-{got}.jpg", "wb").write(b)
+            with open(f"{work}/{folder}/{r['id']}-{got}.jpg", "wb") as f:
+                f.write(b)
             got += 1
             if got >= n:
                 break
@@ -157,7 +191,10 @@ def photos(work, n, ids, src):
 
 
 def sheet(work, ids, folder):
-    from PIL import Image, ImageDraw  # 시스템 python3 (-I 없이) 에 PIL 있음
+    mods = pil()
+    if not mods:
+        sys.exit(NO_PIL)
+    Image, ImageDraw, ImageOps = mods
     rows = [r for r in load(work, "data.json", []) if not ids or r["id"] in ids]
     W, H, C = 200, 150, 8
     groups = [(r, sorted(glob.glob(f"{work}/{folder}/{r['id']}-*.jpg"), key=lambda p: int(p.rsplit("-", 1)[1][:-4]))) for r in rows]
@@ -166,7 +203,7 @@ def sheet(work, ids, folder):
     y = 0
     for r, g in groups:
         for k, p in enumerate(g):
-            t = Image.open(p).convert("RGB")
+            t = ImageOps.exif_transpose(Image.open(p)).convert("RGB")
             t.thumbnail((W, H))
             x, yy = (k % C) * W, y + (k // C) * H
             im.paste(t, (x, yy))
@@ -177,14 +214,28 @@ def sheet(work, ids, folder):
     print(out)
 
 
+def to_jpeg(src, out, size=900, quality=70):
+    """사진을 긴 변 size px, JPEG quality로 저장한다. Pillow 우선, 없으면 macOS에서만 sips."""
+    mods = pil()
+    if mods:
+        Image, _, ImageOps = mods
+        im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")  # 폰 사진 회전 정보 반영
+        im.thumbnail((size, size))
+        im.save(out, "JPEG", quality=quality)
+    elif sys.platform == "darwin":
+        subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", str(quality), "-Z", str(size), src, "--out", out],
+                       capture_output=True, check=True)
+    else:
+        sys.exit(NO_PIL)
+
+
 def pick(work, cid, paths):
     os.makedirs(f"{work}/site/img", exist_ok=True)
     rows = load(work, "data.json", [])
     imgs = []
     for k, p in enumerate(paths):
         p = p if os.path.isabs(p) else f"{work}/{p}"
-        out = f"{work}/site/img/{cid}-{k}.jpg"
-        subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "70", "-Z", "900", p, "--out", out], capture_output=True, check=True)
+        to_jpeg(p, f"{work}/site/img/{cid}-{k}.jpg")
         imgs.append(f"img/{cid}-{k}.jpg")
     for r in rows:
         if r["id"] == cid:
@@ -200,21 +251,24 @@ def build(work):
     bad = [r["name"] for r in rows if r["section"] not in keys or not r["imgs"] or not r["sum"]]
     if bad:
         sys.exit(f"미완성(section/imgs/sum): {bad}")
-    t = open(TEMPLATE).read()
+    with open(TEMPLATE, encoding="utf-8") as f:
+        t = f.read()
     t = t.replace("__TITLE__", meta["title"]).replace("__META__", json.dumps(meta, ensure_ascii=False))
     t = t.replace("__DATA__", json.dumps(rows, ensure_ascii=False))
-    open(f"{work}/site/index.html", "w").write(t)
+    os.makedirs(f"{work}/site/img", exist_ok=True)
+    with open(f"{work}/site/index.html", "w", encoding="utf-8") as f:
+        f.write(t)
     files = sorted("img/" + f for f in os.listdir(f"{work}/site/img"))
     print(json.dumps(files))
 
 
 def load(work, name, default):
     p = f"{work}/{name}"
-    return json.load(open(p)) if os.path.exists(p) else default
+    return rjson(p) if os.path.exists(p) else default
 
 
 def save(work, name, obj):
-    json.dump(obj, open(f"{work}/{name}", "w"), ensure_ascii=False, indent=1)
+    wjson(f"{work}/{name}", obj, indent=1)
 
 
 def opt(args, name, default=None):

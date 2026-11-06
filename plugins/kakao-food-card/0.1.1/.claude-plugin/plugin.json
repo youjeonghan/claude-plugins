@@ -1,6 +1,6 @@
 {
   "name": "kakao-food-card",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "카카오맵 맛집(즐겨찾기 그룹·장소 링크·가게 목록)을 평점·도보 시간·리뷰 요약·대표사진이 있는 사진 카드 웹페이지로 정리",
   "author": {
     "name": "youjeonghan",
