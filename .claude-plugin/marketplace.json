@@ -61,9 +61,9 @@
     },
     {
       "name": "kakao-food-card",
-      "description": "카카오맵 맛집을 평점·도보 시간·리뷰 요약·대표사진 사진 카드 웹페이지로 정리",
-      "version": "0.1.1",
-      "source": "./plugins/kakao-food-card/0.1.1",
+      "description": "카카오맵 맛집 찾기(지역 검색·평점 관문) + 리뷰 의심·근거 태그가 붙은 사진 카드 웹페이지로 정리",
+      "version": "0.2.0",
+      "source": "./plugins/kakao-food-card/0.2.0",
       "category": "productivity",
       "tags": [
         "kakao-map",

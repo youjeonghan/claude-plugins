@@ -6,16 +6,16 @@
 /* 레이아웃: 상단 요약 + 섹션별(META.sections) 구역, 각 구역은 사진 카드 그리드(폰 1열) */
 :root{
   --bg:#f6f4f1; --surface:#ffffff; --fg:#1d1b19; --muted:#6c665f; --line:#e4dfd8;
-  --land:#c2410c; --land-soft:#fde8dc; --sea:#0b6aa2; --sea-soft:#dcedf8; --star:#e39a00; --kakao:#fee500; --good:#2f8a4c; --rank:#206def;
+  --land:#c2410c; --land-soft:#fde8dc; --sea:#0b6aa2; --sea-soft:#dcedf8; --star:#e39a00; --kakao:#fee500; --good:#2f8a4c; --good-soft:#e3f3e8; --warn:#b42318; --warn-soft:#fde7e4; --rank:#206def;
   --display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif;
   --body:"Noto Sans KR",system-ui,-apple-system,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#151413; --surface:#1f1d1b; --fg:#f1ede8; --muted:#a39b92; --line:#34302c;
-  --land:#fb8a4c; --land-soft:#3a2216; --sea:#5cb3ea; --sea-soft:#13293a; --star:#f5b83d; --good:#6cc98a; --rank:#7aa7ff; color-scheme:dark}}
+  --land:#fb8a4c; --land-soft:#3a2216; --sea:#5cb3ea; --sea-soft:#13293a; --star:#f5b83d; --good:#6cc98a; --good-soft:#16301f; --warn:#ff8a7a; --warn-soft:#3a1b17; --rank:#7aa7ff; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#151413; --surface:#1f1d1b; --fg:#f1ede8; --muted:#a39b92; --line:#34302c;
-  --land:#fb8a4c; --land-soft:#3a2216; --sea:#5cb3ea; --sea-soft:#13293a; --star:#f5b83d; --good:#6cc98a; --rank:#7aa7ff; color-scheme:dark}
+  --land:#fb8a4c; --land-soft:#3a2216; --sea:#5cb3ea; --sea-soft:#13293a; --star:#f5b83d; --good:#6cc98a; --good-soft:#16301f; --warn:#ff8a7a; --warn-soft:#3a1b17; --rank:#7aa7ff; color-scheme:dark}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;word-break:keep-all;overflow-wrap:break-word}
 .wrap{max-width:1080px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 header h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
@@ -34,8 +34,8 @@ section h2{font-family:var(--display);font-weight:400;font-size:28px;margin:0 0 
 section h2 small{font-family:var(--body);font-size:14px;color:var(--muted)}
 section.warm h2{color:var(--land)} section.cool h2{color:var(--sea)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:14px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
-.photo{position:relative;aspect-ratio:4/3;background:var(--line);max-width:100%}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;min-width:0}
+.photo{position:relative;aspect-ratio:4/3;background:var(--line);max-width:100%;border-radius:13px 13px 0 0;overflow:hidden}
 .photo img{width:100%;height:100%;object-fit:cover;display:block}
 .walk{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.72);color:#fff;border-radius:10px;padding:6px 10px;font-size:13px;line-height:1.3}
 .walk b{font-family:var(--display);font-weight:400;font-size:22px;margin-right:2px}
@@ -52,6 +52,7 @@ section.warm h2{color:var(--land)} section.cool h2{color:var(--sea)}
 .rate{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .rate b{font-family:var(--display);font-weight:400;font-size:24px;color:var(--star)}
 .rate span{display:block;font-size:12px;color:var(--muted)}
+.rate b.na{font-family:var(--body);font-size:15px;font-weight:700;color:var(--muted)}
 .few{color:var(--land)!important}
 .ai{font-size:14px;margin:0}
 .tags{display:flex;flex-wrap:wrap;gap:5px}
@@ -78,6 +79,31 @@ section.warm h2{color:var(--land)} section.cool h2{color:var(--sea)}
 .kbtn svg{width:18px;height:18px}
 .foot{font-size:12.5px;color:var(--muted);margin-top:auto;padding-top:6px}
 .note{margin-top:40px;font-size:12.5px;color:var(--muted)}
+.day{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--muted)}
+.day select{font:inherit;font-size:14px;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 10px}
+.flags{display:flex;flex-wrap:wrap;gap:6px}
+.flag{position:relative}
+.flag>button{font:inherit;font-size:12.5px;font-weight:500;line-height:1.2;padding:4px 9px;border-radius:999px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.flag>button::after{content:"?";display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;border:1px solid currentColor;font-size:9.5px;opacity:.7}
+.flag.warn>button{background:var(--warn-soft);color:var(--warn)}
+.flag.info>button{background:var(--bg);color:var(--muted);border-color:var(--line)}
+.flag.good>button{background:var(--good-soft);color:var(--good)}
+.flag>button:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.tip{display:none;position:absolute;left:0;top:100%;z-index:30;padding-top:6px;width:max-content;max-width:min(330px,calc(100vw - 48px))}
+.tip>div{background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.16)}
+.tip ul{margin:0;padding-left:1.1em;display:grid;gap:8px}
+.tip a{color:var(--rank);font-weight:500}
+.tip q{display:block;color:var(--fg);margin-top:2px}
+.tip small{display:block;color:var(--muted);font-size:11.5px}
+.tip p{margin:8px 0 0;color:var(--muted);font-size:11.5px}
+@media (hover:hover){.flag:hover>.tip{display:block}}
+.flag.open>.tip{display:block}
+@media (max-width:600px){.tip{position:static;width:auto;max-width:none}.flag.open{flex-basis:100%}}
+.busy{display:grid;gap:3px;font-size:12.5px;color:var(--muted)}
+.bars{display:flex;align-items:flex-end;gap:2px;height:30px}
+.bars i{flex:1;background:var(--line);border-radius:2px 2px 0 0;min-height:2px}
+.bars i.pk{background:var(--warn)} .bars i.qt{background:var(--good)}
+.hrs{display:flex;justify-content:space-between;font-size:10.5px;font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:no-preference){.photo img{transition:opacity .15s}}
 </style>
 <div class="wrap">
@@ -91,6 +117,7 @@ section.warm h2{color:var(--land)} section.cool h2{color:var(--sea)}
     <button id="s-rate" aria-pressed="false" data-sort="rate">평점 순</button>
     <button id="s-rev" aria-pressed="false" data-sort="rev">리뷰 많은 순</button>
   </div>
+  <label class="day">요일 <select id="day" aria-label="방문 요일"></select></label>
   <nav class="jump" id="jump"></nav>
 </div>
 <div id="sections"></div>
@@ -104,35 +131,77 @@ document.getElementById('h-sub').textContent = META.subtitle;
 document.getElementById('note').textContent = META.note;
 document.getElementById('jump').innerHTML = META.sections.map(s=>`<a class="${s.tone}" href="#${s.key}">${s.label} ${DATA.filter(r=>r.section===s.key).length}곳</a>`).join('');
 document.getElementById('sections').innerHTML = META.sections.map(s=>`<section class="${s.tone}" id="${s.key}"><h2>${s.label} <small>${s.sub||''}</small></h2><div class="grid" id="g-${s.key}"></div></section>`).join('');
+const DAYS = ['일','월','화','수','목','금','토'];
+let DAY = DAYS.includes(META.day) ? DAYS.indexOf(META.day) : new Date().getDay();
+let SORT = 'walk';
+const daySel = document.getElementById('day');
+daySel.innerHTML = DAYS.map((d,i)=>`<option value="${i}"${i===DAY?' selected':''}>${d}요일</option>`).join('');
+daySel.addEventListener('change', () => { DAY = +daySel.value; render(SORT); });
 const won = p => p ? p.toLocaleString('ko-KR') + '원' : '';
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function flag(k, label, body){
+  return `<span class="flag ${k}"><button type="button" aria-expanded="false">${esc(label)}</button><span class="tip" role="tooltip"><div>${body}</div></span></span>`;
+}
+function flags(r){
+  const f = (r.flags||[]).map(x=>flag(x.k, x.t, esc(x.tip)));
+  if ((r.ev||[]).length) f.push(flag('good', `근거 ${r.ev.length}`,
+    `<ul>${r.ev.map(e=>`<li><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)}</a><q>${esc(e.quote)}</q><small>${esc([e.author,e.date].filter(Boolean).join(' · '))}</small></li>`).join('')}</ul><p>협찬 문구가 없는 후기에서 맛 이야기만 골랐어요.</p>`));
+  return f.length ? `<div class="flags">${f.join('')}</div>` : '';
+}
+function hoursOn(r){
+  const h = (r.hours||[]).find(([d])=>d===DAYS[DAY]);
+  return h ? `${DAYS[DAY]}요일 ${esc(h[1])} 영업` : `${DAYS[DAY]}요일 영업시간 정보 없음`;
+}
+function busy(r){
+  if (!r.vis) return '';
+  const v = r.vis[DAY], from = 10, to = 23, max = Math.max(1, ...r.vis.flat());
+  const seg = v.slice(from, to+1);
+  if (!seg.some(x=>x>0)) return `<div class="busy">${DAYS[DAY]}요일 방문 데이터 없음 (휴무일 수 있어요)</div>`;
+  const pk = from + seg.indexOf(Math.max(...seg));
+  const quiet = (a,b) => { let best=-1; for (let h=a; h<=b; h++) if (v[h]>0 && (best<0 || v[h]<v[best])) best=h; return best; };
+  const ql = quiet(11,14), qd = quiet(17,21);
+  const calm = [ql>=0&&`점심 ${ql}시`, qd>=0&&`저녁 ${qd}시`].filter(Boolean).join(', ');
+  const bars = seg.map((x,i)=>`<i class="${from+i===pk?'pk':(from+i===ql||from+i===qd)?'qt':''}" style="height:${Math.round(x/max*100)}%"></i>`).join('');
+  return `<div class="busy"><span>${DAYS[DAY]}요일 가장 붐빔 <b>${pk}시</b>${calm?` · 덜 붐빔 ${calm}`:''}</span>
+    <div class="bars" role="img" aria-label="${DAYS[DAY]}요일 ${from}시부터 ${to}시까지 시간대별 방문자">${bars}</div>
+    <div class="hrs"><span>${from}시</span><span>14시</span><span>18시</span><span>${to}시</span></div></div>`;
+}
 function card(r){
-  const today = r.hours[0] ? r.hours[0][1] : '';
   return `<article class="card">
     <div class="photo"><img src="${r.imgs[0]}" alt="${esc(r.name)} 사진" loading="lazy">
       ${r.st?`<div class="walk"><span class="line l${esc(r.line)}">${esc(r.line)}</span>${esc(r.st)} ${esc(r.exit)}번 출구<br>도보 <b>${r.m}</b>분 · ${r.dist}m</div>`:''}</div>
     <div class="thumbs">${r.imgs.map((s,i)=>`<button aria-pressed="${i===0}" aria-label="사진 ${i+1}"><img src="${s}" alt="" loading="lazy"></button>`).join('')}</div>
     <div class="body">
       <div class="top"><div><h3 class="name">${esc(r.name)}</h3><div class="cat">${esc(r.cat)}</div></div>
-        <div class="rate"><b>★ ${r.rating!=null?r.rating.toFixed(1):'-'}</b><span class="${r.rc<10?'few':''}">리뷰 ${r.rc}건</span></div></div>
+        <div class="rate">${r.rating!=null?`<b>★ ${r.rating.toFixed(1)}</b><span class="${r.rc<10?'few':''}">리뷰 ${r.rc}건</span>`:`<b class="na">평점 비공개</b><span>리뷰 ${r.rc}건</span>`}</div></div>
       ${r.badge ? `<span class="badge"><svg viewBox="0 0 13 16" fill="currentColor" aria-hidden="true" class="l"><path d="M9.5 15.5C5 15 2 11.5 2.2 6.5l.9.1C3 11 5.6 14 9.6 14.5z"/><ellipse cx="2.6" cy="4.2" rx="1.3" ry="2.2"/><ellipse cx="4.6" cy="9.2" rx="2.2" ry="1.2" transform="rotate(35 4.6 9.2)"/><ellipse cx="1.4" cy="8.6" rx="1.1" ry="2" transform="rotate(-20 1.4 8.6)"/><ellipse cx="7.2" cy="12.6" rx="2.2" ry="1.1" transform="rotate(25 7.2 12.6)"/><ellipse cx="3.6" cy="12.4" rx="1.1" ry="2" transform="rotate(-40 3.6 12.4)"/></svg><svg class="pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>${esc(r.badge)}<svg viewBox="0 0 13 16" fill="currentColor" aria-hidden="true" class="r"><path d="M9.5 15.5C5 15 2 11.5 2.2 6.5l.9.1C3 11 5.6 14 9.6 14.5z"/><ellipse cx="2.6" cy="4.2" rx="1.3" ry="2.2"/><ellipse cx="4.6" cy="9.2" rx="2.2" ry="1.2" transform="rotate(35 4.6 9.2)"/><ellipse cx="1.4" cy="8.6" rx="1.1" ry="2" transform="rotate(-20 1.4 8.6)"/><ellipse cx="7.2" cy="12.6" rx="2.2" ry="1.1" transform="rotate(25 7.2 12.6)"/><ellipse cx="3.6" cy="12.4" rx="1.1" ry="2" transform="rotate(-40 3.6 12.4)"/></svg></span>` : `<span class="badge none">인기 맛집 태그 없음</span>`}
+      ${flags(r)}
       <div class="tags">${r.tags.map(t=>`<span>${esc(t)}</span>`).join('')}${r.price?`<span>가격대 ${r.price}</span>`:''}</div>
       <div class="sum"><h4>리뷰 요약</h4><ul>${r.sum.split(/(?<=\.)\s+/).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
         <dl class="pc"><dt class="g">좋아요</dt><dd class="chips">${r.pros.map(s=>`<span>${esc(s)}</span>`).join('')}</dd><dt class="b">아쉬워요</dt><dd class="chips">${r.cons.map(s=>`<span>${esc(s)}</span>`).join('')}</dd></dl>
         ${r.str.length?`<div class="strs">리뷰어가 꼽은 장점: ${r.str.map(([n,c])=>`${esc(n)} ${c}`).join(' · ')}</div>`:''}</div>
       <ul class="menu">${r.menu.map(m=>`<li><span>${esc(m.n)}</span><span class="p">${won(m.p)}</span></li>`).join('')}</ul>
-      <div class="foot">오늘 ${esc(today)} 영업 · 블로그 후기 ${r.blog.toLocaleString('ko-KR')}개</div>
+      ${busy(r)}
+      <div class="foot">${hoursOn(r)} · 블로그 후기 ${r.blog.toLocaleString('ko-KR')}개</div>
       <a class="kbtn" href="https://place.map.kakao.com/${r.id}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>카카오맵에서 보기</a>
     </div></article>`;
 }
-const sorters = {walk:(a,b)=>(a.m??99)-(b.m??99)||b.rating-a.rating, rate:(a,b)=>b.rating-a.rating||b.rc-a.rc, rev:(a,b)=>b.rc-a.rc};
+const sorters = {walk:(a,b)=>(a.m??99)-(b.m??99)||(b.rating??0)-(a.rating??0), rate:(a,b)=>(b.rating??-1)-(a.rating??-1)||b.rc-a.rc, rev:(a,b)=>b.rc-a.rc};
 function render(key){
+  SORT = key;
   for (const s of META.sections)
     document.getElementById('g-'+s.key).innerHTML = DATA.filter(r=>r.section===s.key).sort(sorters[key]).map(card).join('');
   document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.sort===key));
 }
 document.querySelector('.seg').addEventListener('click', e => { const b=e.target.closest('button'); if(b) render(b.dataset.sort); });
+const closeFlags = keep => document.querySelectorAll('.flag.open').forEach(f => { if (f!==keep) { f.classList.remove('open'); f.querySelector('button').setAttribute('aria-expanded','false'); } });
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeFlags(null); });
 document.addEventListener('click', e => {
+  if (!e.target.closest('.tip')) {
+    const fb = e.target.closest('.flag>button');
+    closeFlags(fb ? fb.parentElement : null);
+    if (fb) { const o = fb.parentElement.classList.toggle('open'); fb.setAttribute('aria-expanded', o); return; }
+  }
   const t = e.target.closest('.thumbs button'); if(!t) return;
   const c = t.closest('.card'); c.querySelector('.photo img').src = t.querySelector('img').src;
   c.querySelectorAll('.thumbs button').forEach(b=>b.setAttribute('aria-pressed', b===t));
