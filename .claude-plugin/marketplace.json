@@ -58,6 +58,18 @@
         "aside",
         "research"
       ]
+    },
+    {
+      "name": "kakao-food-card",
+      "description": "카카오맵 맛집을 평점·도보 시간·리뷰 요약·대표사진 사진 카드 웹페이지로 정리",
+      "version": "0.1.0",
+      "source": "./plugins/kakao-food-card/0.1.0",
+      "category": "productivity",
+      "tags": [
+        "kakao-map",
+        "restaurant",
+        "artifact"
+      ]
     }
   ]
 }

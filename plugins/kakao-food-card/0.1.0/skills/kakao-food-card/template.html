@@ -1,0 +1,141 @@
+<title>__TITLE__</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 레이아웃: 상단 요약 + 섹션별(META.sections) 구역, 각 구역은 사진 카드 그리드(폰 1열) */
+:root{
+  --bg:#f6f4f1; --surface:#ffffff; --fg:#1d1b19; --muted:#6c665f; --line:#e4dfd8;
+  --land:#c2410c; --land-soft:#fde8dc; --sea:#0b6aa2; --sea-soft:#dcedf8; --star:#e39a00; --kakao:#fee500; --good:#2f8a4c; --rank:#206def;
+  --display:"Do Hyeon","Noto Sans KR",system-ui,sans-serif;
+  --body:"Noto Sans KR",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151413; --surface:#1f1d1b; --fg:#f1ede8; --muted:#a39b92; --line:#34302c;
+  --land:#fb8a4c; --land-soft:#3a2216; --sea:#5cb3ea; --sea-soft:#13293a; --star:#f5b83d; --good:#6cc98a; --rank:#7aa7ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151413; --surface:#1f1d1b; --fg:#f1ede8; --muted:#a39b92; --line:#34302c;
+  --land:#fb8a4c; --land-soft:#3a2216; --sea:#5cb3ea; --sea-soft:#13293a; --star:#f5b83d; --good:#6cc98a; --rank:#7aa7ff; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;word-break:keep-all;overflow-wrap:break-word}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header h1{font-family:var(--display);font-weight:400;font-size:clamp(30px,6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
+header p{color:var(--muted);margin:8px 0 0}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding-block:14px;margin-top:14px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface)}
+.seg button{font:inherit;font-size:14px;border:0;background:none;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.seg button:focus-visible,a:focus-visible,.thumbs button:focus-visible{outline:2px solid var(--sea);outline-offset:2px}
+.jump{display:flex;gap:8px}
+.jump a{font-size:14px;text-decoration:none;padding:6px 12px;border-radius:999px;font-weight:500}
+.jump a.warm{background:var(--land-soft);color:var(--land)} .jump a.cool{background:var(--sea-soft);color:var(--sea)}
+section{margin-top:36px;scroll-margin-top:80px}
+section h2{font-family:var(--display);font-weight:400;font-size:28px;margin:0 0 4px;display:flex;align-items:baseline;gap:10px}
+section h2 small{font-family:var(--body);font-size:14px;color:var(--muted)}
+section.warm h2{color:var(--land)} section.cool h2{color:var(--sea)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-top:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.photo{position:relative;aspect-ratio:4/3;background:var(--line);max-width:100%}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.walk{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.72);color:#fff;border-radius:10px;padding:6px 10px;font-size:13px;line-height:1.3}
+.walk b{font-family:var(--display);font-weight:400;font-size:22px;margin-right:2px}
+.line{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;font-size:11px;font-weight:700;color:#fff;margin-right:4px;vertical-align:1px}
+.line{background:#666} .l1{background:#0052a4} .l2{background:#00a84d} .l3{background:#ef7c1c} .l4{background:#00a5de} .l5{background:#996cac} .l6{background:#cd7c2f} .l7{background:#747f00} .l8{background:#e6186c} .l9{background:#bdb092}
+.thumbs{display:flex;gap:6px;padding:8px 10px 0}
+.thumbs button{border:2px solid transparent;padding:0;border-radius:6px;overflow:hidden;width:48px;height:36px;cursor:pointer;background:none}
+.thumbs button[aria-pressed="true"]{border-color:var(--fg)}
+.thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.name{font-weight:700;font-size:17px;margin:0;line-height:1.3}
+.cat{color:var(--muted);font-size:13px}
+.rate{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.rate b{font-family:var(--display);font-weight:400;font-size:24px;color:var(--star)}
+.rate span{display:block;font-size:12px;color:var(--muted)}
+.few{color:var(--land)!important}
+.ai{font-size:14px;margin:0}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tags span{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.menu{list-style:none;margin:0;padding:8px 0 0;border-top:1px dashed var(--line);font-size:13.5px;display:grid;gap:2px}
+.menu li{display:flex;justify-content:space-between;gap:10px}
+.menu .p{font-variant-numeric:tabular-nums;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:2px;align-self:flex-start;font-size:13.5px;line-height:1.2;color:var(--rank)}
+.badge svg{width:13px;height:16px;flex:none}
+.badge .pin{width:13px;height:13px;margin-right:1px}
+.badge .r{transform:scaleX(-1)}
+.badge.none{color:var(--muted);font-size:12.5px}
+.sum{background:var(--bg);border-radius:10px;padding:10px 12px;display:grid;gap:8px}
+.sum h4{margin:0;font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:500}
+.sum ul{margin:0;padding-left:1.1em;font-size:14px;display:grid;gap:4px;text-wrap:pretty}
+.sum li::marker{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:4px 10px}
+.chips span{white-space:nowrap}
+.pc{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;font-size:13px}
+.pc dt{font-weight:700} .pc dt.g{color:var(--good)} .pc dt.b{color:var(--land)} .pc dd{margin:0;color:var(--muted);min-width:0}
+.strs{font-size:12.5px;color:var(--muted)}
+.kbtn{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;padding:11px 14px;border-radius:10px;background:var(--kakao);color:#191600;font-weight:700;font-size:15px;text-decoration:none}
+.kbtn:hover{filter:brightness(.96)}
+.kbtn svg{width:18px;height:18px}
+.foot{font-size:12.5px;color:var(--muted);margin-top:auto;padding-top:6px}
+.note{margin-top:40px;font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.photo img{transition:opacity .15s}}
+</style>
+<div class="wrap">
+<header>
+  <h1 id="h-title"></h1>
+  <p id="h-sub"></p>
+</header>
+<div class="bar">
+  <div class="seg" role="group" aria-label="정렬">
+    <button id="s-walk" aria-pressed="true" data-sort="walk">가까운 순</button>
+    <button id="s-rate" aria-pressed="false" data-sort="rate">평점 순</button>
+    <button id="s-rev" aria-pressed="false" data-sort="rev">리뷰 많은 순</button>
+  </div>
+  <nav class="jump" id="jump"></nav>
+</div>
+<div id="sections"></div>
+<p class="note" id="note"></p>
+</div>
+<script>
+const DATA = __DATA__;
+const META = __META__;
+document.getElementById('h-title').textContent = META.title;
+document.getElementById('h-sub').textContent = META.subtitle;
+document.getElementById('note').textContent = META.note;
+document.getElementById('jump').innerHTML = META.sections.map(s=>`<a class="${s.tone}" href="#${s.key}">${s.label} ${DATA.filter(r=>r.section===s.key).length}곳</a>`).join('');
+document.getElementById('sections').innerHTML = META.sections.map(s=>`<section class="${s.tone}" id="${s.key}"><h2>${s.label} <small>${s.sub||''}</small></h2><div class="grid" id="g-${s.key}"></div></section>`).join('');
+const won = p => p ? p.toLocaleString('ko-KR') + '원' : '';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function card(r){
+  const today = r.hours[0] ? r.hours[0][1] : '';
+  return `<article class="card">
+    <div class="photo"><img src="${r.imgs[0]}" alt="${esc(r.name)} 사진" loading="lazy">
+      ${r.st?`<div class="walk"><span class="line l${esc(r.line)}">${esc(r.line)}</span>${esc(r.st)} ${esc(r.exit)}번 출구<br>도보 <b>${r.m}</b>분 · ${r.dist}m</div>`:''}</div>
+    <div class="thumbs">${r.imgs.map((s,i)=>`<button aria-pressed="${i===0}" aria-label="사진 ${i+1}"><img src="${s}" alt="" loading="lazy"></button>`).join('')}</div>
+    <div class="body">
+      <div class="top"><div><h3 class="name">${esc(r.name)}</h3><div class="cat">${esc(r.cat)}</div></div>
+        <div class="rate"><b>★ ${r.rating!=null?r.rating.toFixed(1):'-'}</b><span class="${r.rc<10?'few':''}">리뷰 ${r.rc}건</span></div></div>
+      ${r.badge ? `<span class="badge"><svg viewBox="0 0 13 16" fill="currentColor" aria-hidden="true" class="l"><path d="M9.5 15.5C5 15 2 11.5 2.2 6.5l.9.1C3 11 5.6 14 9.6 14.5z"/><ellipse cx="2.6" cy="4.2" rx="1.3" ry="2.2"/><ellipse cx="4.6" cy="9.2" rx="2.2" ry="1.2" transform="rotate(35 4.6 9.2)"/><ellipse cx="1.4" cy="8.6" rx="1.1" ry="2" transform="rotate(-20 1.4 8.6)"/><ellipse cx="7.2" cy="12.6" rx="2.2" ry="1.1" transform="rotate(25 7.2 12.6)"/><ellipse cx="3.6" cy="12.4" rx="1.1" ry="2" transform="rotate(-40 3.6 12.4)"/></svg><svg class="pin" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>${esc(r.badge)}<svg viewBox="0 0 13 16" fill="currentColor" aria-hidden="true" class="r"><path d="M9.5 15.5C5 15 2 11.5 2.2 6.5l.9.1C3 11 5.6 14 9.6 14.5z"/><ellipse cx="2.6" cy="4.2" rx="1.3" ry="2.2"/><ellipse cx="4.6" cy="9.2" rx="2.2" ry="1.2" transform="rotate(35 4.6 9.2)"/><ellipse cx="1.4" cy="8.6" rx="1.1" ry="2" transform="rotate(-20 1.4 8.6)"/><ellipse cx="7.2" cy="12.6" rx="2.2" ry="1.1" transform="rotate(25 7.2 12.6)"/><ellipse cx="3.6" cy="12.4" rx="1.1" ry="2" transform="rotate(-40 3.6 12.4)"/></svg></span>` : `<span class="badge none">인기 맛집 태그 없음</span>`}
+      <div class="tags">${r.tags.map(t=>`<span>${esc(t)}</span>`).join('')}${r.price?`<span>가격대 ${r.price}</span>`:''}</div>
+      <div class="sum"><h4>리뷰 요약</h4><ul>${r.sum.split(/(?<=\.)\s+/).filter(Boolean).map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+        <dl class="pc"><dt class="g">좋아요</dt><dd class="chips">${r.pros.map(s=>`<span>${esc(s)}</span>`).join('')}</dd><dt class="b">아쉬워요</dt><dd class="chips">${r.cons.map(s=>`<span>${esc(s)}</span>`).join('')}</dd></dl>
+        ${r.str.length?`<div class="strs">리뷰어가 꼽은 장점: ${r.str.map(([n,c])=>`${esc(n)} ${c}`).join(' · ')}</div>`:''}</div>
+      <ul class="menu">${r.menu.map(m=>`<li><span>${esc(m.n)}</span><span class="p">${won(m.p)}</span></li>`).join('')}</ul>
+      <div class="foot">오늘 ${esc(today)} 영업 · 블로그 후기 ${r.blog.toLocaleString('ko-KR')}개</div>
+      <a class="kbtn" href="https://place.map.kakao.com/${r.id}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>카카오맵에서 보기</a>
+    </div></article>`;
+}
+const sorters = {walk:(a,b)=>(a.m??99)-(b.m??99)||b.rating-a.rating, rate:(a,b)=>b.rating-a.rating||b.rc-a.rc, rev:(a,b)=>b.rc-a.rc};
+function render(key){
+  for (const s of META.sections)
+    document.getElementById('g-'+s.key).innerHTML = DATA.filter(r=>r.section===s.key).sort(sorters[key]).map(card).join('');
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.sort===key));
+}
+document.querySelector('.seg').addEventListener('click', e => { const b=e.target.closest('button'); if(b) render(b.dataset.sort); });
+document.addEventListener('click', e => {
+  const t = e.target.closest('.thumbs button'); if(!t) return;
+  const c = t.closest('.card'); c.querySelector('.photo img').src = t.querySelector('img').src;
+  c.querySelectorAll('.thumbs button').forEach(b=>b.setAttribute('aria-pressed', b===t));
+});
+render('walk');
+</script>
