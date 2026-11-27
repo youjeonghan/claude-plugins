@@ -70,6 +70,18 @@
         "restaurant",
         "artifact"
       ]
+    },
+    {
+      "name": "coupang-review",
+      "description": "쿠팡 구매후기 작성 도우미 — 실사용 경험 인터뷰로 체험단 공식 기준(양질의 실사용 후기)에 맞춘 후기·사진 목록 작성, 리뷰 활동·체험단 마감 기록",
+      "version": "0.1.0",
+      "source": "./plugins/coupang-review/0.1.0",
+      "category": "productivity",
+      "tags": [
+        "coupang",
+        "review",
+        "shopping"
+      ]
     }
   ]
 }

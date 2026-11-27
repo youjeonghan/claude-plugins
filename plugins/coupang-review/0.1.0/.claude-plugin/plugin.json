@@ -1,0 +1,12 @@
+{
+  "name": "coupang-review",
+  "version": "0.1.0",
+  "description": "쿠팡 구매후기 작성 도우미 — 실제 사용 경험을 물어 받아 쿠팡 체험단 공식 기준(양질의 실사용 후기)에 맞는 후기·한줄 요약·사진 목록을 만들고, 리뷰 활동과 체험단 마감일을 기록",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/"
+}
