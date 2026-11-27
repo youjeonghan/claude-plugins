@@ -1,5 +1,11 @@
 # Changelog — coupang-review
 
+## [0.3.1] - 2026-11-27
+### Changed
+- 기본 출력 형식을 사용자 검증 템플릿으로 변경(`references/default-template.md`: 🚀 별점, 번호 섹션, "-" 글머리, 종합 한 줄평). 줄글은 원할 때만.
+### Fixed
+- 쿠팡 리뷰 칸이 `•`를 `&bull;`로 깨뜨림 → 글머리는 `- `만 사용. 깨지는 기호 목록 관리 규칙 추가.
+
 ## [0.3.0] - 2026-11-27
 ### Added
 - 사용자 템플릿(`~/.claude/coupang-review/template.md`)이 있으면 그 형식으로 출력.
