@@ -73,9 +73,9 @@
     },
     {
       "name": "coupang-review",
-      "description": "쿠팡 후기 텍스트 작성 — 링크·내 경험·사진 입력, 내 템플릿 형식 지원, 경험은 내 말만·스펙/구성품은 상품 페이지 원문 기준, 빈 포인트 되묻기, 업로드는 직접, 체험단 마감 기록",
-      "version": "0.3.3",
-      "source": "./plugins/coupang-review/0.3.3",
+      "description": "쿠팡 후기 텍스트 작성 — 링크·내 경험·사진 입력, 아이폰(기본, 이모지 없음)/PC 모드 템플릿, 경험은 내 말만·스펙은 상품 페이지 기준(표시 최소화), 업로드는 직접, 체험단 마감 기록",
+      "version": "0.4.0",
+      "source": "./plugins/coupang-review/0.4.0",
       "category": "productivity",
       "tags": [
         "coupang",
