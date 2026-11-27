@@ -1,0 +1,12 @@
+{
+  "name": "coupang-review",
+  "version": "0.2.1",
+  "description": "쿠팡 후기 텍스트 작성 — 링크·내 경험·사진을 받아 다른 리뷰의 빈 포인트를 되묻고, 내 말투로 한줄 요약·상세리뷰만 출력(업로드는 직접), 리뷰 활동·체험단 마감 기록",
+  "author": {
+    "name": "youjeonghan",
+    "url": "https://github.com/youjeonghan"
+  },
+  "repository": "https://github.com/youjeonghan/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/"
+}
